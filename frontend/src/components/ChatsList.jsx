@@ -4,18 +4,18 @@ import UsersLoadingSkeleton from './UsersLoadingSkeleton';
 import NoChatsFound from './NoChatsFound';
 
 function ChatsList() {
-  const { getMyChatPartners, chats, isUsersLaoding, setSelectedUser } = useChatStore();
+  const { getMyChatPartners, chats, isUsersLoading, setSelectedUser } = useChatStore();
 
   useEffect( ()=> {
     getMyChatPartners()
   }, [getMyChatPartners])
 
-  if(isUsersLaoding  ) return <UsersLoadingSkeleton />;
+  if(isUsersLoading) return <UsersLoadingSkeleton />;
   if(chats.length === 0) return <NoChatsFound />;
 
   return (
     <>
-      {chats.map((chat) => {
+      {chats.map((chat) => (
         <div 
             className='bg-cyan-500/10 p-4 rounded-lg cursor-pointer hover:bg-cyan-500/20 transition-colors'
             key={chat._id}
@@ -30,7 +30,7 @@ function ChatsList() {
             <h4 className='text-slate-200 font-medium truncate'>{chat.fullName}</h4>
           </div>
         </div>
-      })}
+      ))}
     </>
   )
 }
