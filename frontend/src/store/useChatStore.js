@@ -13,7 +13,7 @@ export const useChatStore = create((set, get) => ({
     isSoundEnabled: localStorage.getItem("isSoundEnabled") === "true",
 
     toggleSound: () => {
-        const newSoundState = !get.isSoundEnabled;
+        const newSoundState = !get().isSoundEnabled;
         localStorage.setItem("isSoundEnabled", newSoundState);
         set({isSoundEnabled: newSoundState});
     },
