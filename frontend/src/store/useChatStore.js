@@ -11,6 +11,9 @@ export const useChatStore = create((set, get) => ({
     isUsersLoading: false,
     isMessagesLoading: false,
     isSoundEnabled: localStorage.getItem("isSoundEnabled") === "true",
+    onlineUsers: [],
+
+    setOnlineUsers: (users) => set({ onlineUsers: users }),
 
     toggleSound: () => {
         const newSoundState = !get().isSoundEnabled;
@@ -48,4 +51,16 @@ export const useChatStore = create((set, get) => ({
             set({ isUsersLoading: false});
         }
     },
+
+    getMessagesByUserId: async (userId) => {
+        set({ isMessagesLoading: true});
+        try {
+            const res = await axiosInstance.get(`/messages/${userId}`);
+            set({messages: res.data});
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong");
+        } finally {
+            set({ isMessagesLoading: false });
+        }
+    }
 }));
