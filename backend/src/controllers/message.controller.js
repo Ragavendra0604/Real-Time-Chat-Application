@@ -1,7 +1,7 @@
 import Message from "../models/Message.js";
 import User from "../models/User.js";
 import cloudinary from "../lib/cloudinary.js";
-import { getReceiverSocketId } from "../lib/socket.js";
+import { getReceiverSocketIds, io } from "../lib/socket.js";
 
 
 export const getAllContacts = async (req, res) => {
@@ -68,9 +68,11 @@ export const sendMessage = async (req, res) =>{
 
         await newMessage.save();
 
-        const receiverSocketId = getReceiverSocketId(receiverId);
-        if(receiverSocketId) {
-            io.to(receiverSocketId).emit("newMessage", newMessage);
+        const receiverSocketIds = getReceiverSocketIds(receiverId);
+        if (receiverSocketIds.length > 0) {
+            receiverSocketIds.forEach(socketId => {
+                io.to(socketId).emit("newMessage", newMessage);
+            });
         }
 
         res.status(201).json(newMessage);
@@ -84,23 +86,15 @@ export const getChatPartners = async (req, res) => {
     try {
         const loggedInUserId = req.user._id;
 
-        const message = await Message.find({
-            $or: [{ senderId: loggedInUserId }, {receiverId: loggedInUserId} ],
-        });
+        const sentToIds = await Message.distinct("receiverId", { senderId: loggedInUserId });
 
-        const chatPartnerIds = [
-            ...new Set(
-                message.map((msg) => 
-                    msg.senderId.toString() === loggedInUserId.toString() 
-                        ? msg.receiverId.toString()
-                        : msg.senderId.toString()
-                ),
-            ),
-        ];
+        const receivedFromIds = await Message.distinct("senderId", { receiverId: loggedInUserId });
 
-        const chatParnters = await User.find({_id: {$in:chatPartnerIds}}).select("-password");
+        const chatPartnerIds = [...new Set([...sentToIds, ...receivedFromIds].map(id => id.toString()))];
 
-        res.status(200).json(chatParnters);
+        const chatPartners = await User.find({ _id: { $in: chatPartnerIds } }).select("-password");
+
+        res.status(200).json(chatPartners);
     } catch (error) {
         console.log("Error in getChatPartners: ", error.message);
         res.status(500).json({error: "Internal server error"});
