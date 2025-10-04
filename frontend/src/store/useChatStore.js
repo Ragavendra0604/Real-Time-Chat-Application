@@ -67,9 +67,12 @@ export const useChatStore = create((set, get) => ({
     },
 
     sendMessage: async (messageData) => {
-        const { selectedUser, messages } = get();
-        const {authUser} = useAuthStore.getState();
-        const tempId = `temp${Date.now()}`
+        const { selectedUser } = get();
+        const { authUser } = useAuthStore.getState();
+
+        if (!selectedUser) return toast.error("No user selected to send a message to.");
+
+        const tempId = `temp_${Date.now()}`;
 
         const optimisticMessage = {
             _id: tempId,
@@ -79,16 +82,21 @@ export const useChatStore = create((set, get) => ({
             image: messageData.image,
             createdAt: new Date().toISOString(),
             isOptimistic: true,
-        }
-        set({messages: [...messages, optimisticMessage]});
+        };
 
-        if (!selectedUser) return toast.error("No user selected to send a message to.");
+        set((state) => ({ messages: [...state.messages, optimisticMessage] }));
 
         try {
             const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
-            set({messages: messages.concat(res.data)});
+            const newMessage = res.data;
+
+            set((state) => ({
+                messages: state.messages.map((msg) => (msg._id === tempId ? newMessage : msg)),
+            }));
         } catch (error) {
-            set({messages: messages});
+            set((state) => ({
+                messages: state.messages.filter((msg) => msg._id !== tempId),
+            }));
             toast.error(error.response?.data?.message || "Something went wrong");
         }
     },
