@@ -35,26 +35,27 @@ export const getMessagesByUserId = async (req, res) => {
     }
 };
 
-export const sendMessage = async (req, res) =>{
+
+export const sendMessage = async (req, res) => {
     try {
         const {text, image} = req.body;
         const {id: receiverId} = req.params;
         const senderId = req.user._id;
 
-        if(!text && !image){
+        if (!text && !image) {
             return res.status(400).json({message: "Text or image is required."});
         }
-        if(senderId.equals(receiverId)){
-            return res.status(400).json({message: "Canonot message to yourself"});
+        if (senderId.equals(receiverId)) {
+            return res.status(400).json({message: "Cannot message to yourself"});
         }
 
         const receiverExists = await User.exists({_id: receiverId});
-        if(!receiverExists){
+        if (!receiverExists) {
             return res.status(404).json({message: "Receiver not found."});
         }
 
         let imageUrl;
-        if(image) {
+        if (image) {
             const uploadResponse = await cloudinary.uploader.upload(image);
             imageUrl = uploadResponse.secure_url;
         }
@@ -69,10 +70,14 @@ export const sendMessage = async (req, res) =>{
         await newMessage.save();
 
         const receiverSocketIds = getReceiverSocketIds(receiverId);
+        const senderSocketIds = getReceiverSocketIds(senderId.toString());
+
         if (receiverSocketIds.length > 0) {
-            receiverSocketIds.forEach(socketId => {
-                io.to(socketId).emit("newMessage", newMessage);
-            });
+            io.to(receiverSocketIds).emit("newMessage", newMessage);
+        }
+
+        if (senderSocketIds.length > 0) {
+            io.to(senderSocketIds).emit("newMessage", newMessage);
         }
 
         res.status(201).json(newMessage);
