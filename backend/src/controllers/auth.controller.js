@@ -3,7 +3,7 @@ import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
 import cloudinary from "../lib/cloudinary.js";
-import {ENV } from "../lib/env.js";
+import {ENV} from "../lib/env.js";
 
 export const signup = async (req, res) => {
     const {fullName, email, password} = req.body;
