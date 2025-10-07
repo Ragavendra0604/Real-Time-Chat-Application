@@ -1,8 +1,15 @@
-import {Resend} from 'resend';
 import {ENV} from "./env.js";
-export const resendClient = new Resend(ENV.RESEND_API_KEY);
+import nodemailer from "nodemailer";
+
+export const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: ENV.EMAIL_FROM,
+        pass: ENV.EMAIL_PASSWORD, 
+    }
+});
 
 export const sender = {
-    email: ENV.EMAIL_FROM,
-    name: ENV.EMAIL_FROM_NAME, 
+  name: "NodeChat",
+  email: process.env.EMAIL_FROM,
 };
