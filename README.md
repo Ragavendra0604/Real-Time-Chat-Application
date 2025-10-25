@@ -50,6 +50,7 @@ This is a secure, reliable, and ad-free real-time chat application built with th
 * **Hosting (Frontend & Backend):** **Sevalla**
 * **Media Storage:** **Cloudinary**
 * **Email Service:** **Nodemailer** (for welcome emails, etc.)
+* **Rate limiting:** **Arcjet**
 
 ---
 
