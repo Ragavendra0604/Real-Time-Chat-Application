@@ -2,7 +2,7 @@
 
 This is a secure, reliable, and ad-free real-time chat application built with the MERN stack (MongoDB, Express, React, Node.js) and Socket.IO.The goal of this project is to provide an efficient and intuitive platform for instant communication, complete with authentication, profile management, and media sharing, addressing the complexity and security concerns of existing chat application.
 
-* **Live Demo:** [**https://nodechat-5dcp.sevalla.app**](https://nodechat-5dcp.sevalla.app)
+* **Live Demo:** [**https://nodechat-5dcp.sevalla.app**](https://nodechat-5dcip.sevalla.app/login)
 
 ## 🌟 Key Features
 
