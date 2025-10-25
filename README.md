@@ -216,13 +216,7 @@ This project was submitted by:
 * **Naresh V** (2023510042).
 * **Hariragavendra M G** (2023510031)
 * **Ruparagunath G** (2023510305)
-* **Yuvaraj A** (2023510037) 
-
-## Acknowledgements
-
-This project was developed as part of the **Naan Mudhalvan** program in collaboration with **IBM**.
-
-Submitted to the Department of Information Technology, Madras Institute of Technology (MIT), Anna University.
+* **Yuvaraj A** (2023510037)
 
 ## 📜 License
 
