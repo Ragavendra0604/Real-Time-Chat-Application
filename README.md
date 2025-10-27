@@ -82,7 +82,7 @@ This is a secure, reliable, and ad-free real-time chat application built with th
 
 1.  **Clone the repository:**
     ```sh
-    git clone [https://github.com/Ragavendra0604/Real-Time-Chat-Application.git](https://github.com/Ragavendra0604/Real-Time-Chat-Application.git)
+    git clone https://github.com/Ragavendra0604/Real-Time-Chat-Application.git
     cd Real-Time-Chat-Application
     ```
 
